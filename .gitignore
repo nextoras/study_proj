@@ -21,7 +21,8 @@ out/
 # Gradle files
 .gradle/
 build/
-
+launch.json
+tasks.json
 # Local configuration file (sdk path, etc)
 local.properties
 
