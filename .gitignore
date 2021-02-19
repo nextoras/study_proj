@@ -10,7 +10,7 @@
 # Java class files
 *.class
 obj/
-*.csproj
+
 # Generated files
 bin/
 gen/
