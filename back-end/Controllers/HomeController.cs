@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using back_end.Models;
-
+//test
 namespace back_end.Controllers
 {
     public class HomeController : Controller
@@ -26,6 +26,18 @@ namespace back_end.Controllers
         public IActionResult Privacy()
         {
             return View();
+        }
+        
+        [HttpPost]
+        public JsonResult GetWeather(string City)
+        {
+            string ApiKey = "ae4b4e0ee9db8f4040b03a514cf7a928";
+            string url =string.Format("http://api.openweathermap.org/data/2.5/weather?q={0}&appid={1}",City,ApiKey);
+            var webClient = new WebClient();
+            var content = webClient.DownloadString(url);
+            object JsonWeather = JsonConvert.DeserializeObject(content);
+            string ContentSerializble = JsonConvert.SerializeObject(JsonWeather);
+            return Json(ContentSerializble);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
