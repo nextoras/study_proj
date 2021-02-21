@@ -1,13 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using back_end.Models;
-using System.Web;
-using Newtonsoft.Json;
 using System.Net;
 
 
@@ -31,17 +26,39 @@ namespace back_end.Controllers
         {
             return View();
         }
-        
+
         [HttpPost]
-        public JsonResult GetWeather(string City)
+        public IActionResult GetWeatherFromCity(string City)
         {
             string ApiKey = "ae4b4e0ee9db8f4040b03a514cf7a928";
-            string url =string.Format("http://api.openweathermap.org/data/2.5/weather?q={0}&appid={1}",City,ApiKey);
+            string url = string.Format("pro.openweathermap.org/data/2.5/forecast/hourly?q={0}&appid={1}", City, ApiKey);
+            string content;
             var webClient = new WebClient();
-            var content = webClient.DownloadString(url);
-            object JsonWeather = JsonConvert.DeserializeObject(content);
-            string ContentSerializble = JsonConvert.SerializeObject(JsonWeather);
-            return Json(ContentSerializble);
+            try
+            {
+                content = webClient.DownloadString(url);
+                return Content(content);
+            }
+            catch(ArgumentException)
+            {
+                return View("/Shared/Error");
+            }            
+        }
+
+        public IActionResult GetWeatherFromLatLen(string Flat, string Len)
+        {
+            string ApiKey = "ae4b4e0ee9db8f4040b03a514cf7a928";
+            string url = string.Format("https://api.openweathermap.org/data/2.5/forecast?lat={0}&lon={1}&units=metric&appid={2}", Flat, Len, ApiKey);
+            var webClient = new WebClient();
+            try
+            {
+                var content = webClient.DownloadString(url);
+                return Content(content);
+            }
+            catch(ArgumentException)
+            {
+                return View("/Shared/Error");
+            }
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
