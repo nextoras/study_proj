@@ -1,24 +1,20 @@
 import React from 'react';
 import { isSameDay, format } from "date-fns";
 import { Text, StyleSheet, View, Image, ImageBackground, ScrollView } from 'react-native';
-import { Description, Week } from './Styles';
 import {
     useFonts,
     PlayfairDisplay_700Bold,
 } from '@expo-google-fonts/playfair-display';
 import { AppLoading } from 'expo';
 import imageDictionary from '../utils/imageDictionary.js';
-import Card from './Card'
-
+import Card from './Card';
 
 const todayIconWeather = require("../assets/icons/01d.png");
 const editIcon = require("../assets/icons/settings.png");
 const personage = require("../assets/icons/zombie2.png");
 const cloudPers = require("../assets/images/cloudWords.png");
-const scrollWeather = require("../assets/images/scrollWeather.png");
 
-
-/** Вью погоды*/
+/** Компонент погоды по геолокации*/
 const Weather = ({ forecast: { name, list, timezone } }) => {
 
     const currentWeather = list.filter((day) => {
@@ -57,9 +53,6 @@ const Weather = ({ forecast: { name, list, timezone } }) => {
                         </View>
                         <View style={styles.tempContainer}>
                             <Text style={styles.temp}>{Math.round(currentWeather[0].main.temp)}°C</Text>
-                        </View>
-                        <View style={styles.editContainer}>
-                            <Image source={editIcon} style={styles.settings}></Image>
                         </View>
                     </View>
                     <View style={styles.todayInfo}>
@@ -117,19 +110,14 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     cityContainer: {
-        flex: 2,
+        flex: 1,
         justifyContent: 'center',
         alignItems: 'center'
     },
     tempContainer: {
-        flex: 2,
+        flex: 1,
         justifyContent: 'center',
         alignItems: 'center'
-    },
-    editContainer: {
-        flex: 1,
-        alignItems: 'flex-start',
-        paddingTop: 40
     },
     todayWeatherIcon: {
         height: 50,
@@ -146,10 +134,6 @@ const styles = StyleSheet.create({
         fontSize: 36,
         fontWeight: 'bold',
         color: '#6B7AC9',
-    },
-    settings: {
-        height: 50,
-        width: 50,
     },
     ///////////
     scrollWeather: {

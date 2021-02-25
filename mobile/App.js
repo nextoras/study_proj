@@ -1,28 +1,24 @@
 import React from 'react';
-import useWeather from "./utils/useWeather";
-import { ImageBackground, StyleSheet, Text } from 'react-native';
-import Weather from './components/Weather';
+import { NavigationContainer } from '@react-navigation/native';
+import { createDrawerNavigator } from '@react-navigation/drawer';
+import Test from './components/Test';
+import WeatherView from './components/WeatherView';
 
 
-/** Задний фон  */
-const back = require("./assets/images/background.jpg")
 
+/** Навигатор  */
+const Drawer = createDrawerNavigator();
+
+/** Root component */
 const App = () => {
-  const weather = useWeather();
   return (
-    <ImageBackground source={back} style={styles.container}>
-      {!weather ? <Text>Don't work</Text> : <Weather forecast={weather} />}
-    </ImageBackground>
+    <NavigationContainer>
+      <Drawer.Navigator initialRouteName="Test">
+        <Drawer.Screen name="WeatherView" component={WeatherView} />
+        <Drawer.Screen name="Test" component={Test} />
+      </Drawer.Navigator>
+    </NavigationContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    width: null,
-    height: null,
-  }
-})
-
 
 export default App;

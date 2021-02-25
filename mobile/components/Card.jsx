@@ -1,8 +1,6 @@
 import React from "react";
 import { Text, StyleSheet, View, Image } from 'react-native';
 
-
-
 /** Кард погоды   */
 export default function Card({ name, icon, temp, hour }) {
   return (
