@@ -26,7 +26,7 @@ namespace back_end.Controllers
         {
             return View();
         }
-
+ 
         [HttpPost]
         public IActionResult GetWeatherFromCity(string City)
         {
