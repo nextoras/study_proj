@@ -10,9 +10,18 @@ import imageDictionary from '../utils/imageDictionary.js';
 import Card from './Card';
 
 const todayIconWeather = require("../assets/icons/01d.png");
-const editIcon = require("../assets/icons/settings.png");
 const personage = require("../assets/icons/zombie2.png");
 const cloudPers = require("../assets/images/cloudWords.png");
+
+const ChoosePhrase = (temp) => {
+    if (temp < 0 && temp > -10)
+        return 'Брр, время доставать зимние вещи из шкафа.';
+    else if (temp < -10 && temp > -20)
+        return 'В такую погоду не обойтись без шапки и шарфа.';
+    else if (temp < -20 && temp > -30)
+        return 'Не глупи, оставайся дома под пледом и с какао.';
+    else return 'LOXI'
+}
 
 /** Компонент погоды по геолокации*/
 const Weather = ({ forecast: { name, list, timezone } }) => {
@@ -71,7 +80,7 @@ const Weather = ({ forecast: { name, list, timezone } }) => {
                     <View style={styles.personage}>
                         <View style={styles.cloudContainer}>
                             <ImageBackground source={cloudPers} style={styles.cloudImage}>
-                                <Text style={{ alignItems: 'center' }}>{'\n\n           \u{1F60D},\nна улице довольно \nхолодно. стоит надеить свитер'}</Text>
+                                <Text style={{ fontWeight: 'bold', alignItems: 'center', justifyContent: 'flex-end' }}>{ChoosePhrase(Math.round(currentWeather[0].main.temp))}</Text>
                             </ImageBackground>
                         </View>
                         <View style={styles.personageContainer}>
@@ -154,7 +163,8 @@ const styles = StyleSheet.create({
     cloudImage: {
         width: 200,
         height: 126,
-        justifyContent: 'center',
+        justifyContent: 'flex-end',
+        paddingBottom: 15,
         alignItems: 'center',
     },
     personageImage: {

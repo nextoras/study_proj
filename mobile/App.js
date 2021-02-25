@@ -13,7 +13,7 @@ const Drawer = createDrawerNavigator();
 const App = () => {
   return (
     <NavigationContainer>
-      <Drawer.Navigator initialRouteName="Test">
+      <Drawer.Navigator initialRouteName="WeatherView">
         <Drawer.Screen name="WeatherView" component={WeatherView} />
         <Drawer.Screen name="Test" component={Test} />
       </Drawer.Navigator>
