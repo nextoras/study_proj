@@ -2,6 +2,7 @@ import React from 'react';
 import useWeather from './../utils/useWeather';
 import { Text, View, StyleSheet, ImageBackground } from 'react-native';
 import Weather from './Weather'
+import LoadingView from './LoadingView';
 
 /** Задний фон  */
 const back = require("./../assets/images/background.jpg")
@@ -12,7 +13,7 @@ const WeatherView = () => {
     return (
         <View style={styles.container}>
             <ImageBackground source={back} style={styles.image}>
-                {!weather ? <Text>Don't work</Text> : <Weather forecast={weather} />}
+                {!weather ? <LoadingView /> : <Weather forecast={weather} />}
             </ImageBackground>
 
         </View>
