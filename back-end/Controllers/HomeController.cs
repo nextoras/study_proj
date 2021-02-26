@@ -31,18 +31,20 @@ namespace back_end.Controllers
         public IActionResult GetWeatherFromCity(string City)
         {
             string ApiKey = "ae4b4e0ee9db8f4040b03a514cf7a928";
-            string url = string.Format("pro.openweathermap.org/data/2.5/forecast/hourly?q={0}&appid={1}", City, ApiKey);
+            string url = string.Format("https://api.openweathermap.org/data/2.5/weather?q={0}&appid={1}", City, ApiKey);
             string content;
             var webClient = new WebClient();
-            try
+           try
             {
                 content = webClient.DownloadString(url);
                 return Content(content);
             }
-            catch(ArgumentException)
+            catch
             {
-                return View("/Shared/Error");
-            }            
+                return Ok("Че-то пошло по пи*(город - пустой)");
+            }
+
+
         }
 
         public IActionResult GetWeatherFromLatLen(string Flat, string Len)
@@ -50,15 +52,17 @@ namespace back_end.Controllers
             string ApiKey = "ae4b4e0ee9db8f4040b03a514cf7a928";
             string url = string.Format("https://api.openweathermap.org/data/2.5/forecast?lat={0}&lon={1}&units=metric&appid={2}", Flat, Len, ApiKey);
             var webClient = new WebClient();
-            try
+            try 
             {
                 var content = webClient.DownloadString(url);
                 return Content(content);
             }
-            catch(ArgumentException)
+            catch
             {
-                return View("/Shared/Error");
+                return Ok("сервис ёкнулся (пришли пустые параметры lat & len)");
             }
+
+
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
