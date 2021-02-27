@@ -3,6 +3,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import Test from './components/Test';
 import WeatherView from './components/WeatherView';
+import LoadingView from './components/LoadingView';
 
 
 
