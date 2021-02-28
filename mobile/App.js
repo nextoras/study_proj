@@ -1,19 +1,20 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
-import { createDrawerNavigator } from '@react-navigation/drawer';
-import WeatherView from './components/WeatherView';
-
+import { createStackNavigator } from '@react-navigation/stack';
+import WeatherView from './components/LatLon/WeatherView';
+import CityWeatherView from './components/City/CityWeatherView';
 
 /** Навигатор  */
-const Drawer = createDrawerNavigator();
+const Stack = createStackNavigator();
 
 /** Root component */
 const App = () => {
   return (
     <NavigationContainer>
-      <Drawer.Navigator initialRouteName="WeatherView">
-        <Drawer.Screen name="WeatherView" component={WeatherView} />
-      </Drawer.Navigator>
+      <Stack.Navigator initialRouteName="WeatherView">
+        <Stack.Screen name="WeatherView" component={WeatherView} options={{ headerShown: false }} />
+        <Stack.Screen name="CityWeatherView" component={CityWeatherView} options={{ headerShown: false }} />
+      </Stack.Navigator>
     </NavigationContainer>
   );
 }

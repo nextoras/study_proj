@@ -1,6 +1,6 @@
 import React from 'react';
 import { isSameDay, format } from "date-fns";
-import { Text, StyleSheet, View, Image, ImageBackground, ScrollView } from 'react-native';
+import { Text, StyleSheet, View, Image, ImageBackground, ScrollView, TouchableOpacity } from 'react-native';
 import {
     useFonts,
     PlayfairDisplay_700Bold,
@@ -16,15 +16,15 @@ const cloudPers = require("../assets/images/cloudWords.png");
 const ChoosePhrase = (temp) => {
     if (temp < 0 && temp > -10)
         return 'Брр, время доставать зимние вещи из шкафа.';
-    else if (temp < -10 && temp > -20)
+    else if (temp < -10 && temp >= -20)
         return 'В такую погоду не обойтись без шапки и шарфа.';
     else if (temp < -20 && temp > -30)
         return 'Не глупи, оставайся дома под пледом и с какао.';
-    else return 'LOXI'
+    else return ''
 }
 
 /** Компонент погоды по геолокации*/
-const Weather = ({ forecast: { name, list, timezone } }) => {
+const Weather = ({ navigation, forecast: { name, list, timezone } }) => {
 
     const currentWeather = list.filter((day) => {
         const now = new Date().getTime() + Math.abs(timezone * 1000);
@@ -58,7 +58,9 @@ const Weather = ({ forecast: { name, list, timezone } }) => {
                             <Image source={todayIconWeather} style={styles.todayWeatherIcon}></Image>
                         </View>
                         <View style={styles.cityContainer}>
-                            <Text style={styles.cityText}>{name}</Text>
+                            <TouchableOpacity onPress={() => navigation.navigate('CityWeatherView')}>
+                                <Text style={styles.cityText}>{name}</Text>
+                            </TouchableOpacity>
                         </View>
                         <View style={styles.tempContainer}>
                             <Text style={styles.temp}>{Math.round(currentWeather[0].main.temp)}°C</Text>
