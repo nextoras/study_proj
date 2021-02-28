@@ -1,16 +1,15 @@
 import React from "react";
-import { ImageBackground, StyleSheet, View, Text, Image } from "react-native";
+import { ImageBackground, StyleSheet, View, Text, Image, ActivityIndicator } from "react-native";
 
 /** Задний фон  */
 const back = require("./../assets/images/background.jpg")
-const icon = require("./../assets/icon.png")
 
 const LoadingView = (props) => {
 
   return (
     <ImageBackground source={back} style={styles.image}>
       <View style={styles.container}>
-        <Image source={icon} style={styles.icon} />
+        <ActivityIndicator size='large' color='#3003F5' />
         <Text style={styles.load}>Загрузка...</Text>
       </View>
     </ImageBackground>
