@@ -6,12 +6,12 @@ import {
     PlayfairDisplay_700Bold,
 } from '@expo-google-fonts/playfair-display';
 import { AppLoading } from 'expo';
-import imageDictionary from '../utils/imageDictionary.js';
-import Card from './Card';
+import imageDictionary from './../../utils/imageDictionary.js';
+import Card from './../Card';
 
-const todayIconWeather = require("../assets/icons/01d.png");
-const personage = require("../assets/icons/zombie2.png");
-const cloudPers = require("../assets/images/cloudWords.png");
+const todayIconWeather = require("./../../assets/icons/01d.png");
+const personage = require("./../../assets/icons/zombie2.png");
+const cloudPers = require("./../../assets/images/cloudWords.png");
 
 const ChoosePhrase = (temp) => {
     if (temp < 0 && temp > -10)
