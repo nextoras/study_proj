@@ -1,11 +1,11 @@
 import React from 'react';
 import { View, StyleSheet, ImageBackground } from 'react-native';
-import useWeather from '../../utils/useWeather';
+import useWeather from './../../utils/useWeather';
 import Weather from './Weather'
 import LoadingView from '../LoadingView';
 
 /** Задний фон  */
-const back = require("./../assets/images/background.jpg")
+const back = require("./../../assets/images/background.jpg")
 
 /** Вью погоды по геолокации  */
 const WeatherView = ({ navigation }) => {
