@@ -30,44 +30,44 @@ namespace back_end.Controllers
         [HttpPost]
         public IActionResult GetWeatherFromCity(string City)
         {
-            string ApiKey = "ae4b4e0ee9db8f4040b03a514cf7a928";
-            string url = string.Format("https://api.openweathermap.org/data/2.5/weather?q={0}&appid={1}", City, ApiKey);
-            string content;
-            var webClient = new WebClient();
-           try
+            try
             {
-                content = webClient.DownloadString(url);
+                string ApiKey = "ae4b4e0ee9db8f4040b03a514cf7a928";
+                string url = string.Format("https://api.openweathermap.org/data/2.5/weather?q={0}&appid={1}", City, ApiKey);
+                var webClient = new WebClient();
+
+                var content = webClient.DownloadString(url);
+                if(content==null)
+                {
+                    throw new ArgumentException("Город пустой либо не валидный");
+                }
                 return Content(content);
             }
             catch
             {
-                if(City.Length==0 ||City==null)
-                {
-                    return Ok("Не введен город");
-                }
-                else return Ok("Введен не валидный город");
+                throw;
             }
 
         }
 
         public IActionResult GetWeatherFromLatLen(string Flat, string Len)
         {
-            string ApiKey = "ae4b4e0ee9db8f4040b03a514cf7a928";
-            string url = string.Format("https://api.openweathermap.org/data/2.5/forecast?lat={0}&lon={1}&units=metric&appid={2}", Flat, Len, ApiKey);
-            var webClient = new WebClient();
-            try 
+            try
             {
+                string ApiKey = "ae4b4e0ee9db8f4040b03a514cf7a928";
+                string url = string.Format("https://api.openweathermap.org/data/2.5/forecast?lat={0}&lon={1}&units=metric&appid={2}", Flat, Len, ApiKey);
+                var webClient = new WebClient();
                 var content = webClient.DownloadString(url);
+                if (content == null)
+                {
+                    throw new ArgumentException("Широта или долгота не валидны");
+                }
                 return Content(content);
             }
-            catch
+            catch (ArgumentException)
             {
-                if(Flat.Length==0||Len.Length==0)
-                return Ok("Пришли пустые параметры lat или len");
-                else return Ok("Пришли неверные параметры lat или len");
+                throw;
             }
-
-
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
