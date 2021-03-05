@@ -41,9 +41,12 @@ namespace back_end.Controllers
             }
             catch
             {
-                return Ok("Че-то пошло по пи*(город - пустой)");
+                if(City.Length==0 ||City==null)
+                {
+                    return Ok("Не введен город");
+                }
+                else return Ok("Введен не валидный город");
             }
-
 
         }
 
@@ -59,7 +62,9 @@ namespace back_end.Controllers
             }
             catch
             {
-                return Ok("сервис ёкнулся (пришли пустые параметры lat & len)");
+                if(Flat.Length==0||Len.Length==0)
+                return Ok("Пришли пустые параметры lat или len");
+                else return Ok("Пришли неверные параметры lat или len");
             }
 
 
