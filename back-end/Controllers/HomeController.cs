@@ -6,7 +6,7 @@ using back_end.Models;
 using System.Net;
 using Microsoft.Extensions.Configuration;
 using System.Collections.Generic;
-
+using Newtonsoft.Json.Linq;
 
 namespace back_end.Controllers
 {
@@ -69,6 +69,7 @@ namespace back_end.Controllers
 
         }
 
+        
         /// <summary>
         /// Returns info about weather full
         /// </summary>
@@ -91,15 +92,28 @@ namespace back_end.Controllers
                 //добавочный uri для координат без подстановки
                 var uriCoordinates = "https://api.openweathermap.org/data/2.5/forecast?lat={0}&lon={1}&units=metric&appid={2}";
 
-                //if (определить есть ли город) сформировать корректный uri для запроса uri = итоговый uri, учитывать русский язык
+                string content;
+                var webClient = new WebClient();
+                //content = webClient.DownloadString("uri");
 
+                
+                //if (определить есть ли город) сформировать корректный uri для запроса uri = итоговый uri, учитывать русский язык
+                if (city!=null||city.Length!=0)
+                {
+                    var uriFromCity = string.Format("https://api.openweathermap.org/data/2.5/weather?q={0}&appid={1}", city, ApiKey);
+                    content = webClient.DownloadString(uriFromCity);
+                    var coord = JObject.Parse(content)["coord"].ToString();
+                    var lat = JObject.Parse(coord)["lat"].ToString();
+                    var lon = JObject.Parse(coord)["lon"].ToString();
+                    var uriCoordinat =string.Format( "https://api.openweathermap.org/data/2.5/forecast?lat={0}&lon={1}&units=metric&appid={2}",lat,lon,ApiKey);
+                }
+                else
+                {
+                    var uriCoordinat = string.Format("https://api.openweathermap.org/data/2.5/forecast?lat={0}&lon={1}&units=metric&appid={2}", flat, len, ApiKey);
+                }
                 ///если запрос по городу, то мы делаем запрос, чтобы получить координаты и после этого делаем запрос по ним
                 ///если запрос по координатам, то всё ок
 
-                string content;
-                var webClient = new WebClient();
-           
-                content = webClient.DownloadString("uri");
 
                 //десериализация данных 
                 //info result = JsonConvert.DeserializeObject<InfoDTO>(jsonstring);
