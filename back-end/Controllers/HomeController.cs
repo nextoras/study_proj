@@ -4,17 +4,19 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using back_end.Models;
 using System.Net;
-
+using Microsoft.Extensions.Configuration;
 
 namespace back_end.Controllers
 {
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly IConfiguration _configuration;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, IConfiguration configuration)
         {
             _logger = logger;
+            _configuration = configuration;
         }
 
         public IActionResult Index()
@@ -30,8 +32,8 @@ namespace back_end.Controllers
         [HttpPost]
         public IActionResult GetWeatherFromCity(string City)
         {
-            string ApiKey = "ae4b4e0ee9db8f4040b03a514cf7a928";
-            string url = string.Format("https://api.openweathermap.org/data/2.5/weather?q={0}&appid={1}", City, ApiKey);
+            string ApiKey = _configuration["ApiKey"];
+            string url = string.Format("pro.openweathermap.org/data/2.5/forecast/hourly?q={0}&appid={1}", City, ApiKey);
             string content;
             var webClient = new WebClient();
            try
@@ -49,7 +51,7 @@ namespace back_end.Controllers
 
         public IActionResult GetWeatherFromLatLen(string Flat, string Len)
         {
-            string ApiKey = "ae4b4e0ee9db8f4040b03a514cf7a928";
+            string ApiKey = _configuration["ApiKey"];
             string url = string.Format("https://api.openweathermap.org/data/2.5/forecast?lat={0}&lon={1}&units=metric&appid={2}", Flat, Len, ApiKey);
             var webClient = new WebClient();
             try 
