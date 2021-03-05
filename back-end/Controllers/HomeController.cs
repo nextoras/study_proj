@@ -109,7 +109,10 @@ namespace back_end.Controllers
                 }
                 else
                 {
-                    var uriCoordinat = string.Format("https://api.openweathermap.org/data/2.5/forecast?lat={0}&lon={1}&units=metric&appid={2}", flat, len, ApiKey);
+                    if(flat!=null&&len!=null)
+                    {
+                        var uriCoordinat = string.Format("https://api.openweathermap.org/data/2.5/forecast?lat={0}&lon={1}&units=metric&appid={2}", flat, len, ApiKey);
+                    }                    
                 }
                 ///если запрос по городу, то мы делаем запрос, чтобы получить координаты и после этого делаем запрос по ним
                 ///если запрос по координатам, то всё ок
