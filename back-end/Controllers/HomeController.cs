@@ -5,6 +5,8 @@ using Microsoft.Extensions.Logging;
 using back_end.Models;
 using System.Net;
 using Microsoft.Extensions.Configuration;
+using System.Collections.Generic;
+
 
 namespace back_end.Controllers
 {
@@ -65,6 +67,60 @@ namespace back_end.Controllers
             }
 
 
+        }
+
+        /// <summary>
+        /// Returns info about weather full
+        /// </summary>
+        /// <param name="flat">flat</param>
+        /// <param name="len">len</param>
+        /// <param name="city">city</param>
+        /// <returns></returns>
+        [HttpPost]
+        public IActionResult GetInfo(string flat, string len, string city)
+        {
+            try
+            {
+                string ApiKey = "ae4b4e0ee9db8f4040b03a514cf7a928";
+
+                // var uri = базовый uri
+
+                //добавочный uri для случая с городом, но ещё без подстановки
+                var uriCity = "https://api.openweathermap.org/data/2.5/weather?q={0}&appid={1}";
+
+                //добавочный uri для координат без подстановки
+                var uriCoordinates = "https://api.openweathermap.org/data/2.5/forecast?lat={0}&lon={1}&units=metric&appid={2}";
+
+                //if (определить есть ли город) сформировать корректный uri для запроса uri = итоговый uri, учитывать русский язык
+
+                ///если запрос по городу, то мы делаем запрос, чтобы получить координаты и после этого делаем запрос по ним
+                ///если запрос по координатам, то всё ок
+
+                string content;
+                var webClient = new WebClient();
+           
+                content = webClient.DownloadString("uri");
+
+                //десериализация данных 
+                //info result = JsonConvert.DeserializeObject<InfoDTO>(jsonstring);
+
+                //метод формирования дто для дня
+
+                //метод формирования дто для недели
+
+                List<InfoPartDTO> dayInfo = new List<InfoPartDTO>();
+
+                InfoDTO dto = new InfoDTO()
+                {
+                    
+                };
+
+                return Content(content);
+            }
+            catch
+            {
+                return Ok("Че-то пошло по пи*(город - пустой)");
+            }
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
