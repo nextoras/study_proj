@@ -1,20 +1,18 @@
 import React from 'react';
 import { isSameDay, format } from "date-fns";
-import { Text, StyleSheet, View, Image, ImageBackground, ScrollView, TouchableOpacity } from 'react-native';
+import { Text, StyleSheet, View, Image, ImageBackground, TouchableOpacity } from 'react-native';
 import {
     useFonts,
-    PlayfairDisplay_700Bold,
 } from '@expo-google-fonts/playfair-display';
-import { AppLoading } from 'expo';
 import imageDictionary from './../../utils/imageDictionary.js';
 import Card from './../Card';
+import LoadingView from '../LoadingView';
 
-const todayIconWeather = require("./../../assets/icons/01d.png");
 const personage = require("./../../assets/icons/zombie2.png");
 const cloudPers = require("./../../assets/images/cloudWords.png");
 
 const ChoosePhrase = (temp) => {
-    if (temp < 0 && temp > -10)
+    if (temp <= 0 && temp >= -10)
         return 'Брр, время доставать зимние вещи из шкафа.';
     else if (temp < -10 && temp >= -20)
         return 'В такую погоду не обойтись без шапки и шарфа.';
@@ -45,29 +43,53 @@ const Weather = ({ navigation, forecast: { name, list, timezone } }) => {
     });
 
     let [fontsLoaded] = useFonts({
-        PlayfairDisplay_700Bold,
+        'Roboto': require('./../../assets/fonts/Roboto-Medium.ttf'),
+        'PlayfairDisplay': require('./../../assets/fonts/PlayfairDisplay-Bold.ttf'),
+        'Tillana': require('./../../assets/fonts/Tillana-SemiBold.ttf')
     });
     if (!fontsLoaded) {
-        return <AppLoading />;
+        return <LoadingView />;
     } else {
         return (
             currentWeather.length > 0 && (
                 <View style={styles.container}>
                     <View style={styles.currentInfo}>
-                        <View style={styles.todayWeatherContainer}>
-                            <Image source={todayIconWeather} style={styles.todayWeatherIcon}></Image>
+                        <View style={styles.data}>
+                            <View style={styles.todayWeatherContainer}>
+                                <Image source={imageDictionary[currentWeather[0].weather[0].icon
+                                ] || imageDictionary["02d"]}
+                                    style={styles.todayWeatherIcon} />
+                            </View>
+                            <View style={styles.cityContainer}>
+                                <TouchableOpacity onPress={() => navigation.navigate('CityWeatherView')}>
+                                    <Text style={styles.cityText}>{name}</Text>
+                                </TouchableOpacity>
+                            </View>
+                            <View style={styles.tempContainer}>
+                                <Text style={styles.temp}>{Math.round(currentWeather[0].main.temp)}°C</Text>
+                            </View>
                         </View>
-                        <View style={styles.cityContainer}>
-                            <TouchableOpacity onPress={() => navigation.navigate('CityWeatherView')}>
-                                <Text style={styles.cityText}>{name}</Text>
-                            </TouchableOpacity>
-                        </View>
-                        <View style={styles.tempContainer}>
-                            <Text style={styles.temp}>{Math.round(currentWeather[0].main.temp)}°C</Text>
+                        <View style={styles.feels}>
+                            <Text style={{
+                                fontFamily: 'Roboto',
+                                textDecorationLine: 'underline',
+                                fontSize: 18,
+                                color: '#6B7AC9',
+                                paddingRight: 11,
+                                paddingTop: 5
+                            }}>По ощущениям: {Math.round(currentWeather[0].main.feels_like)}°C</Text>
+                            <Text style={{
+                                fontFamily: 'Roboto',
+                                textDecorationLine: 'underline',
+                                fontSize: 18,
+                                color: '#6B7AC9',
+                                paddingLeft: 11,
+                                paddingTop: 5
+                            }}>Ветер: {Math.round(currentWeather[0].wind.speed)} м/с</Text>
                         </View>
                     </View>
                     <View style={styles.todayInfo}>
-                        <ScrollView style={styles.scrollWeather} horizontal={true} showsHorizontalScrollIndicator={false}>
+                        <View style={styles.scrollWeather}>
                             {daysByHour.map((day, index) => (
                                 <Card
                                     key={index}
@@ -77,12 +99,15 @@ const Weather = ({ navigation, forecast: { name, list, timezone } }) => {
                                     hour={day.hour}
                                 />
                             ))}
-                        </ScrollView>
+                        </View>
                     </View>
                     <View style={styles.personage}>
                         <View style={styles.cloudContainer}>
                             <ImageBackground source={cloudPers} style={styles.cloudImage}>
-                                <Text style={{ fontWeight: 'bold', alignItems: 'center', justifyContent: 'flex-end' }}>{ChoosePhrase(Math.round(currentWeather[0].main.temp))}</Text>
+                                <View style={{ width: 200, height: 65, }}>
+                                    <Text style={{ fontFamily: 'Roboto', alignItems: 'center' }}
+                                    >{ChoosePhrase(Math.round(currentWeather[0].main.temp))}</Text>
+                                </View>
                             </ImageBackground>
                         </View>
                         <View style={styles.personageContainer}>
@@ -103,48 +128,65 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
     },
     currentInfo: {
-        flex: 2 / 5,
-        flexDirection: 'row',
+        flex: 2 / 8,
+        flexDirection: 'column',
     },
     todayInfo: {
-        flex: 3 / 5,
+        flex: 2 / 8,
         alignItems: 'center',
     },
     personage: {
-        flex: 1,
-        flexDirection: 'column'
+        flex: 4 / 8,
+        flexDirection: 'column',
     },
     ///////////
+    data: {
+        flex: 3 / 4,
+        flexDirection: 'row',
+        alignItems: 'flex-end'
+    },
     todayWeatherContainer: {
         flex: 1,
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
+        paddingBottom: 15,
     },
     cityContainer: {
         flex: 1,
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
+        paddingBottom: 15,
     },
     tempContainer: {
         flex: 1,
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
+        paddingBottom: 5,
     },
     todayWeatherIcon: {
         height: 50,
         width: 50,
     },
     cityText: {
-        fontFamily: 'PlayfairDisplay_700Bold',
+        fontFamily: 'PlayfairDisplay',
         fontWeight: 'bold',
         fontSize: 36,
         color: '#6B7AC9',
+        textShadowColor: 'rgba(107, 122, 201, 0.95);',
+        //textShadowOffset: { width: -1, height: 1 },
+        textShadowRadius: 3
     },
     temp: {
-        fontFamily: 'PlayfairDisplay_700Bold',
+        fontFamily: 'Tillana',
         fontSize: 36,
         fontWeight: 'bold',
         color: '#6B7AC9',
+    },
+    feels: {
+        flex: 1 / 4,
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'flex-start',
     },
     ///////////
     scrollWeather: {
@@ -152,19 +194,20 @@ const styles = StyleSheet.create({
         width: '100%',
         height: 150,
         position: 'absolute',
+        flexDirection: 'row',
     },
     ///////////
     cloudContainer: {
         flex: 1,
-        alignItems: 'flex-end',
+        alignItems: 'center',
     },
     personageContainer: {
         flex: 1,
         alignItems: 'center',
     },
     cloudImage: {
-        width: 200,
-        height: 126,
+        width: 263,
+        height: 166,
         justifyContent: 'flex-end',
         paddingBottom: 15,
         alignItems: 'center',
@@ -173,6 +216,8 @@ const styles = StyleSheet.create({
         width: 200,
         height: 200
     }
+    /////////////
+
 });
 
 export default Weather;

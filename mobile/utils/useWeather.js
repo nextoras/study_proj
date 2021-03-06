@@ -2,8 +2,9 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { storeWeather, getWeather } from "./storeWeather";
 import useGeoLocation from "./useGeoLocation";
+import { Alert } from "react-native";
 
-const url = "https://sergeyutkin.site";
+const url = "https://api.openweathermap.org";
 
 const callAPI = axios.create({
   baseURL: url,
@@ -25,12 +26,12 @@ export default function useWeather(lat, lon) {
   /** Получение погоды  */
   const fetchAPI = async (lat, lon) => {
     try {
-      const endpoint = `/Home/GetWeatherFromLatLen?Flat=${lat}&Len=${lon}`;
+      const endpoint = `/data/2.5/forecast?lat=${lat}&lon=${lon}&units=metric&appid=ae4b4e0ee9db8f4040b03a514cf7a928`;
       const res = await callAPI.get(endpoint);
       const data = await storeWeather(filterData(res.data));
       setWeather(data);
     } catch (err) {
-      console.log("API conection failed");
+      Alert.alert("Ошибка в определении местоположения. Обратитесь в поддрежку support@gmail.com")
       const data = await getWeather();
       setWeather(data);
     }
