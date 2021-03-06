@@ -78,7 +78,7 @@ namespace back_end.Controllers
         /// <param name="city">city</param>
         /// <returns></returns>
         [HttpPost]
-        public IActionResult GetInfo(string flat, string len, string city)
+        public IActionResult GetInfo(float flat, float len, string city)
         {
             try
             {
@@ -103,13 +103,13 @@ namespace back_end.Controllers
                     var uriFromCity = string.Format("https://api.openweathermap.org/data/2.5/weather?q={0}&appid={1}", city, ApiKey);
                     content = webClient.DownloadString(uriFromCity);
                     var coord = JObject.Parse(content)["coord"].ToString();
-                    var lat = JObject.Parse(coord)["lat"].ToString();
-                    var lon = JObject.Parse(coord)["lon"].ToString();
+                    var lat = float.Parse(JObject.Parse(coord)["lat"].ToString());
+                    var lon = float.Parse(JObject.Parse(coord)["lon"].ToString());
                     var uriCoordinat =string.Format( "https://api.openweathermap.org/data/2.5/forecast?lat={0}&lon={1}&units=metric&appid={2}",lat,lon,ApiKey);
                 }
                 else
                 {
-                    if(flat!=null&&len!=null)
+                    if(flat!=0.0&&len!=0.0)
                     {
                         var uriCoordinat = string.Format("https://api.openweathermap.org/data/2.5/forecast?lat={0}&lon={1}&units=metric&appid={2}", flat, len, ApiKey);
                     }                    
