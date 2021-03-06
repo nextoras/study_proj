@@ -34,39 +34,44 @@ namespace back_end.Controllers
         [HttpPost]
         public IActionResult GetWeatherFromCity(string City)
         {
-            string ApiKey = _configuration["ApiKey"];
-            string url = string.Format("pro.openweathermap.org/data/2.5/forecast/hourly?q={0}&appid={1}", City, ApiKey);
-            string content;
-            var webClient = new WebClient();
-           try
+            try
             {
-                content = webClient.DownloadString(url);
+                string ApiKey = "ae4b4e0ee9db8f4040b03a514cf7a928";
+                string url = string.Format("https://api.openweathermap.org/data/2.5/weather?q={0}&appid={1}", City, ApiKey);
+                var webClient = new WebClient();
+
+                var content = webClient.DownloadString(url);
+                if(content==null)
+                {
+                    throw new ArgumentException("Город пустой либо не валидный");
+                }
                 return Content(content);
             }
             catch
             {
-                return Ok("Че-то пошло по пи*(город - пустой)");
+                throw;
             }
-
 
         }
 
         public IActionResult GetWeatherFromLatLen(string Flat, string Len)
         {
-            string ApiKey = _configuration["ApiKey"];
-            string url = string.Format("https://api.openweathermap.org/data/2.5/forecast?lat={0}&lon={1}&units=metric&appid={2}", Flat, Len, ApiKey);
-            var webClient = new WebClient();
-            try 
+            try
             {
+                string ApiKey = "ae4b4e0ee9db8f4040b03a514cf7a928";
+                string url = string.Format("https://api.openweathermap.org/data/2.5/forecast?lat={0}&lon={1}&units=metric&appid={2}", Flat, Len, ApiKey);
+                var webClient = new WebClient();
                 var content = webClient.DownloadString(url);
+                if (content == null)
+                {
+                    throw new ArgumentException("Широта или долгота не валидны");
+                }
                 return Content(content);
             }
-            catch
+            catch (ArgumentException)
             {
-                return Ok("сервис ёкнулся (пришли пустые параметры lat & len)");
+                throw;
             }
-
-
         }
 
         
@@ -132,7 +137,7 @@ namespace back_end.Controllers
                     
                 };
 
-                return Content(content);
+                return Content("");
             }
             catch
             {
