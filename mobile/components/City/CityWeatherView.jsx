@@ -1,9 +1,16 @@
 import React from 'react';
-import { Text, StyleSheet, View, ImageBackground, Image, TextInput, TouchableOpacity } from 'react-native';
+import { Text, StyleSheet, View, ImageBackground, Image, TextInput, TouchableOpacity, Alert } from 'react-native';
+import { AppLoading } from 'expo';
+import * as Font from 'expo-font';
+
 
 /** Задний фон  */
 const back = require("./../../assets/images/background.jpg")
-const searchIcon = require("./../../assets/icons/searchIcon.png")
+const searchIcon = require("./../../assets/icons/search.png")
+
+let customFonts = {
+    'PlayfairDisplay': require('./../../assets/fonts/PlayfairDisplay-Bold.ttf'),
+};
 
 /** Вью погоды по поиску города  */
 export default class CityWeatherView extends React.Component {
@@ -22,6 +29,7 @@ export default class CityWeatherView extends React.Component {
             humidity: "",
             pressure: "",
             visiblity: "",
+            fontsLoaded: false,
         }
         this.fetch_weather()
     }
@@ -40,64 +48,118 @@ export default class CityWeatherView extends React.Component {
                 this.setState({ pressure: json.main.pressure + " hPa" })
                 this.setState({ visibility: (json.visibility / 1000).toFixed(2) + " Km" })
             })
-            .catch((error) => console.error(error))
+            .catch((error) => Alert.alert("Такого города не существует"))
             .finally(() => {
                 this.setState({ isLoading: false });
             });
     }
 
+    async _loadFontsAsync() {
+        await Font.loadAsync(customFonts);
+        this.setState({ fontsLoaded: true });
+    }
+
+    componentDidMount() {
+        this._loadFontsAsync();
+    }
 
     render() {
-        return (
-            <ImageBackground source={back} style={styles.container}>
-                <View style={styles.searchBoxView}>
-                    <TextInput style={styles.searchBox}
-                        onChangeText={(text) => this.setState({ city: text })}
-                        placeholder={"Введите город"} />
-                    <TouchableOpacity onPress={this.fetch_weather}>
-                        <Image style={styles.searchIcon} source={searchIcon} />
-                    </TouchableOpacity>
-                </View>
-                <View style={{ flex: 3 / 5 }}>
-                    <Text style={{ color: 'black' }}>{this.state.temp}</Text>
-                    <Text style={{ color: 'black' }}>{this.state.city_display}</Text>
-                </View>
-            </ImageBackground>
+        if (this.state.fontsLoaded) {
+            return (
+                <ImageBackground source={back} style={styles.back}>
+                    <View style={styles.container}>
+                        <View style={styles.cityView}>
+                            <Text style={styles.city}>{this.state.city_display}</Text>
+                            <View style={styles.searchBoxView}>
+                                <TextInput style={styles.searchBox}
+                                    onChangeText={(text) => this.setState({ city: text })}
+                                    placeholder={"Введите город"}>
+                                </TextInput>
+                                <TouchableOpacity onPress={this.fetch_weather}>
+                                    <Image style={styles.searchIcon} source={searchIcon} />
+                                </TouchableOpacity>
+                            </View>
+                        </View>
 
-        );
+                        <View style={styles.weather}>
+                            <Text style={styles.temp}>{this.state.temp}</Text>
+                        </View>
+                    </View>
+                </ImageBackground>
+
+            );
+        }
+        else { return <AppLoading />; }
     }
 }
 
 
+
+
 const styles = StyleSheet.create({
-    container: {
+    back: {
         flex: 1,
         width: null,
         height: null,
+    },
+    container: {
+        flex: 1,
         justifyContent: 'center',
+        flexDirection: 'column',
         alignItems: 'center',
     },
     searchBoxView: {
+        flex: 1 / 4,
         height: "20%",
         width: "100%",
-        justifyContent: "center",
-        alignItems: "center",
-        flexDirection: "row"
+        justifyContent: 'center',
+        alignItems: 'flex-start',
+        flexDirection: "row",
     },
     searchBox: {
-        height: "20%",
-        width: "80%",
+        height: 50,
+        width: 250,
         borderColor: "black",
         borderWidth: 1,
         borderRadius: 15,
         color: "black",
-        paddingHorizontal: 15
+        paddingHorizontal: 15,
+        fontSize: 20
     },
     searchIcon: {
-        marginLeft: "2%",
-        height: 25,
-        width: 25,
+        marginLeft: 5,
+        height: 52,
+        width: 62,
         justifyContent: "center",
         alignItems: "center"
+    },
+
+    cityView: {
+        flex: 1 / 4,
+        height: '100%',
+        width: '100%',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    city: {
+        fontFamily: 'PlayfairDisplay',
+        fontWeight: 'bold',
+        fontSize: 36,
+        color: '#6B7AC9',
+        paddingTop: 50,
+        paddingBottom: 20,
+    },
+
+    weather: {
+        flex: 3 / 4,
+        height: '100%',
+        width: '100%',
+        alignItems: 'center',
+    },
+    temp: {
+        fontFamily: 'PlayfairDisplay',
+        fontWeight: 'bold',
+        fontSize: 20,
+        color: '#6B7AC9',
     }
 })
