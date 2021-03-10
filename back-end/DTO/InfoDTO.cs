@@ -6,8 +6,8 @@ namespace back_end
 {
     public class InfoDTO
     {
-        List<InfoPartDTO> dayInfo { get; set;}
-        List<InfoPartDTO> weekInfo { get; set;}
+        public List<InfoPartDTO> dayInfo { get; set;}
+        public List<InfoPartDTO> weekInfo { get; set;}
 
     }
 
