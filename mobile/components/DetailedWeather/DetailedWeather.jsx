@@ -23,7 +23,7 @@ const DetailedWeather = ({ forecast: { name, list, timezone } }) => {
         return {
             date: dt,
             name: format(dt, 'iii PP'),
-            temp: Math.round(day.main.temp),
+            temp: Math.round(day.temp.eve),
             icon:
                 imageDictionary[day.weather[0].icon] || imageDictionary["02d"],
         };
@@ -39,19 +39,17 @@ const DetailedWeather = ({ forecast: { name, list, timezone } }) => {
             currentWeather.length > 0 && (
                 <View style={styles.container}>
                     <View style={styles.city}>
-                        <Text style={styles.cityText}>{name}</Text>
+                        <Text style={styles.cityText}>Kazan</Text>
                     </View>
                     <View style={styles.daysInfo}>
-                        <ScrollView>
-                            {daysByHour.map((day, index) => (
-                                <CardDW
-                                    key={index}
-                                    icon={day.icon}
-                                    name={day.name}
-                                    temp={day.temp}
-                                />
-                            ))}
-                        </ScrollView>
+                        {daysByHour.map((day, index) => (
+                            <CardDW
+                                key={index}
+                                icon={day.icon}
+                                name={day.name}
+                                temp={day.temp}
+                            />
+                        ))}
                     </View>
                 </View>
             )
@@ -75,6 +73,7 @@ const styles = StyleSheet.create({
     daysInfo: {
         flex: 8 / 10,
         alignItems: 'center',
+        paddingBottom: 20,
     },
     ///////////
     cityText: {
