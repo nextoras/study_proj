@@ -1,6 +1,6 @@
 import React from "react";
 import { ImageBackground, StyleSheet, View, Text } from 'react-native';
-import useWeather from './../../utils/useWeather';
+import useDetailedWeather from '../../utils/useDetailedWeather';
 import DetailedWeather from './DetailedWeather'
 
 /** Задний фон  */
@@ -8,7 +8,7 @@ const back = require("./../../assets/images/background.jpg")
 
 /** Вью погоды на неделю  */
 const DetailedWeatherView = () => {
-    const weather = useWeather();
+    const weather = useDetailedWeather();
     return (
         <View style={styles.container}>
             <ImageBackground source={back} style={styles.image}>
