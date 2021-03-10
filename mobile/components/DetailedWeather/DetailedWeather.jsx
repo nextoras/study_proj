@@ -81,6 +81,7 @@ const styles = StyleSheet.create({
         fontFamily: 'PlayfairDisplay',
         fontSize: 36,
         color: '#6B7AC9',
+        paddingTop: 45,
     },
     ///////////
     scrollWeather: {
