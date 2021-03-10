@@ -7,6 +7,11 @@ using System.Net;
 using Microsoft.Extensions.Configuration;
 using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
+using Microsoft.AspNetCore.Http;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
 
 namespace back_end.Controllers
 {
@@ -81,50 +86,27 @@ namespace back_end.Controllers
         /// <param name="flat">flat</param>
         /// <param name="len">len</param>
         /// <param name="city">city</param>
+        /// <param name="language">city</param>
+        /// <param name="format">city</param>
         /// <returns></returns>
         [HttpPost]
-        public IActionResult GetInfo(float flat, float len, string city)
+        public async  Task<IActionResult> GetInfo(float flat, float len, string city, string language, string format)
         {
             try
             {
-                string ApiKey = "ae4b4e0ee9db8f4040b03a514cf7a928";
+                string apiKey = _configuration["ApiKey"];
 
-                // var uri = базовый uri
-
-                //добавочный uri для случая с городом, но ещё без подстановки
-                var uriCity = "https://api.openweathermap.org/data/2.5/weather?q={0}&appid={1}";
-
-                //добавочный uri для координат без подстановки
-                var uriCoordinates = "https://api.openweathermap.org/data/2.5/forecast?lat={0}&lon={1}&units=metric&appid={2}";
-
-                string content;
-                var webClient = new WebClient();
-                //content = webClient.DownloadString("uri");
-
-                
-                //if (определить есть ли город) сформировать корректный uri для запроса uri = итоговый uri, учитывать русский язык
-                if (city!=null||city.Length!=0)
+                if (city != null && city != "")
                 {
-                    var uriFromCity = string.Format("https://api.openweathermap.org/data/2.5/weather?q={0}&appid={1}", city, ApiKey);
-                    content = webClient.DownloadString(uriFromCity);
-                    var coord = JObject.Parse(content)["coord"].ToString();
-                    var lat = float.Parse(JObject.Parse(coord)["lat"].ToString());
-                    var lon = float.Parse(JObject.Parse(coord)["lon"].ToString());
-                    var uriCoordinat =string.Format( "https://api.openweathermap.org/data/2.5/forecast?lat={0}&lon={1}&units=metric&appid={2}",lat,lon,ApiKey);
-                }
-                else
-                {
-                    if(flat!=0.0&&len!=0.0)
-                    {
-                        var uriCoordinat = string.Format("https://api.openweathermap.org/data/2.5/forecast?lat={0}&lon={1}&units=metric&appid={2}", flat, len, ApiKey);
-                    }                    
-                }
-                ///если запрос по городу, то мы делаем запрос, чтобы получить координаты и после этого делаем запрос по ним
-                ///если запрос по координатам, то всё ок
+                    var coordinates = await GetCoordinates(city, apiKey);
 
+                    flat = coordinates.coord.lat;
+                    len = coordinates.coord.lon;
+                }
 
-                //десериализация данных 
-                //info result = JsonConvert.DeserializeObject<InfoDTO>(jsonstring);
+                var info = await GetInfoFromOpenWeather(flat, len, apiKey, language, format);
+
+                var infoDTO = mappingToEntity(info);
 
                 //метод формирования дто для дня
 
@@ -149,6 +131,90 @@ namespace back_end.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+        private async Task<CoordinatesDTO> GetCoordinates(string city, string apiKey)
+        {
+            try
+            {
+                string url = string.Format("https://api.openweathermap.org/data/2.5/weather?q={0}&appid={1}", city, apiKey);
+                var webClient = new WebClient();
+
+                var content = webClient.DownloadString(url);
+                if(content==null)
+                {
+                    throw new ArgumentException("Город пустой либо не валидный");
+                }
+
+                HttpClient client = new HttpClient();
+
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                client.BaseAddress = new Uri(url);
+                client.DefaultRequestHeaders.Add("Accept", "application/json");
+                var response = await client.GetAsync("" );    
+
+                var result = response.Content.ReadAsAsync<CoordinatesDTO>().Result;
+
+                return result;
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
+        private async Task<OpenweatherDTO> GetInfoFromOpenWeather(float lat, float len, string apiKey, string language, string format)
+        {
+            try
+            {
+                string url = string.Format("https://api.openweathermap.org/data/2.5/forecast?lat={0}&lon={1}&units=metric&appid={2}&exclude={3}&lang={4}", lat, len, apiKey, format, language);
+
+
+                HttpClient client = new HttpClient();
+
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                client.BaseAddress = new Uri(url);
+                client.DefaultRequestHeaders.Add("Accept", "application/json");
+                var response = await client.GetAsync("" ); 
+                
+                if(response==null || response.StatusCode != HttpStatusCode.OK)
+                {
+                    throw new ArgumentException("При запросе данных о погоде произошла ошибка");
+                }   
+
+                var resultString = response.Content.ReadAsStringAsync();
+                var result = response.Content.ReadAsAsync<OpenweatherDTO>().Result;
+
+                return result;
+            }
+            catch(Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+        }
+
+        private async Task<InfoDTO> mappingToEntity(OpenweatherDTO openweatherDTO)
+        {
+            InfoDTO dto = new InfoDTO()
+            {
+                dayInfo = new List<InfoPartDTO>(),
+                weekInfo = new List<InfoPartDTO>()
+            };
+
+            foreach (var item in openweatherDTO.list)
+            {
+                
+            }
+
+            return dto;
+        }
+
+        public static DateTime UnixTimeStampToDateTime( long unixTimeStamp )
+        {
+            // Unix timestamp is seconds past epoch
+            System.DateTime dtDateTime = new DateTime(1970,1,1,0,0,0,0,System.DateTimeKind.Utc);
+            dtDateTime = dtDateTime.AddSeconds( unixTimeStamp ).ToLocalTime();
+            return dtDateTime;
         }
     }
 }
