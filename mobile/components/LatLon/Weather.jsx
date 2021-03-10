@@ -8,7 +8,6 @@ import imageDictionary from './../../utils/imageDictionary.js';
 import Card from './../Card';
 import LoadingView from '../LoadingView';
 
-const personage = require("./../../assets/icons/zombie2.png");
 const cloudPers = require("./../../assets/images/cloudWords.png");
 
 const ChoosePhrase = (temp) => {
@@ -19,6 +18,27 @@ const ChoosePhrase = (temp) => {
     else if (temp < -20 && temp > -30)
         return 'Не глупи, оставайся дома под пледом и с какао.';
     else return ''
+}
+const ChoosePersonage = (temp) => {
+    if (temp <= 40 && temp > 30)
+        return imageDictionary['4030'];
+    else if (temp <= 30 && temp > 25)
+        return imageDictionary['3025'];
+    else if (temp <= 25 && temp > 20)
+        return imageDictionary['2520'];
+    else if (temp <= 20 && temp > 10)
+        return imageDictionary['2010'];
+    else if (temp <= 10 && temp > 0)
+        return imageDictionary['100'];
+    else if (temp <= 0 && temp > -10)
+        return imageDictionary['0-10'];
+    else if (temp <= -10 && temp > -20)
+        return imageDictionary['-10-20'];
+    else if (temp <= -20 && temp > -30)
+        return imageDictionary['-20-30'];
+    else if (temp <= -30)
+        return imageDictionary['-30'];
+    else return imageDictionary['def'];
 }
 
 /** Компонент погоды по геолокации*/
@@ -111,7 +131,7 @@ const Weather = ({ navigation, forecast: { name, list, timezone } }) => {
                             </ImageBackground>
                         </View>
                         <View style={styles.personageContainer}>
-                            <Image source={personage} style={styles.personageImage}></Image>
+                            <Image source={ChoosePersonage(Math.round(currentWeather[0].main.temp))} style={styles.personageImage}></Image>
                         </View>
                     </View>
                 </View>

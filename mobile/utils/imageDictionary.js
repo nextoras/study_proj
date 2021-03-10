@@ -38,5 +38,18 @@ export default {
     "tornado": require("../assets/icons/tornado.png"),
     "wind": require("../assets/icons/wind.png"),
     //////////
-    "background": require("../assets/images/background.jpg")
+    "background": require("../assets/images/background.jpg"),
+    //////////
+    '-30': require("../assets/images/personageTemp/_30.png"),
+    '-20-30': require("../assets/images/personageTemp/_20_30.png"),
+    '-10-20': require("../assets/images/personageTemp/_10_20.png"),
+    '0-10': require("../assets/images/personageTemp/0_10.png"),
+    '100': require("../assets/images/personageTemp/1002.png"),
+    '2010': require("../assets/images/personageTemp/2010.png"),
+    '2520': require("../assets/images/personageTemp/2520.png"),
+    '3025': require("../assets/images/personageTemp/3025.png"),
+    '4030': require("../assets/images/personageTemp/4030.png"),
+    'def': require("../assets/images/personageTemp/def.png"),
+
+
 }
