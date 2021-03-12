@@ -1,6 +1,6 @@
 import React from "react";
 import { ImageBackground, StyleSheet, View, Text } from 'react-native';
-import useDetailedWeather from '../../utils/useDetailedWeather';
+import useDetailedWeather from '../../hooks/useDetailedWeather';
 import DetailedWeather from './DetailedWeather'
 
 /** Задний фон  */

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { storeWeather, getWeather } from "./storeWeather";
+import { storeWeather, getWeather } from "../utils/storeWeather";
 import useGeoLocation from "./useGeoLocation";
 import { Alert } from "react-native";
 
