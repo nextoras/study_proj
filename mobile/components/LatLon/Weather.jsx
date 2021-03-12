@@ -192,9 +192,6 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         fontSize: 36,
         color: '#6B7AC9',
-        textShadowColor: 'rgba(107, 122, 201, 0.95);',
-        //textShadowOffset: { width: -1, height: 1 },
-        textShadowRadius: 3
     },
     temp: {
         fontFamily: 'Tillana',

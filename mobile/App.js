@@ -23,35 +23,35 @@ const App = () => {
           headerShown: false,
           drawerIcon: ({ }) => (
             <Image
-              source={require('./assets/iconsTab/today.png')} style={{ width: 20, height: 20 }}
+              source={require('./assets/images/menu/today.png')} style={{ width: 20, height: 20, tintColor: 'black' }}
             />)
         }} />
         <Drawer.Screen name="7 дней" component={DetailedWeatherView} options={{
           headerShown: false,
           drawerIcon: ({ }) => (
             <Image
-              source={require('./assets/iconsTab/calendar.png')} style={{ width: 20, height: 20 }}
+              source={require('./assets/images/menu/calendar.png')} style={{ width: 20, height: 20, tintColor: 'black' }}
             />)
         }} />
         <Drawer.Screen name="Игра" component={TestComponent} options={{
           headerShown: false,
           drawerIcon: ({ }) => (
             <Image
-              source={require('./assets/iconsTab/game.png')} style={{ width: 20, height: 20 }}
+              source={require('./assets/images/menu/game.png')} style={{ width: 20, height: 20, tintColor: 'black' }}
             />)
         }} />
         <Drawer.Screen name="Настройки" component={TestComponent} options={{
           headerShown: false,
           drawerIcon: ({ }) => (
             <Image
-              source={require('./assets/iconsTab/settings.png')} style={{ width: 20, height: 20 }}
+              source={require('./assets/images/menu/settings.png')} style={{ width: 20, height: 20, tintColor: 'black' }}
             />)
         }} />
         <Drawer.Screen name="Помощь" component={TestComponent} options={{
           headerShown: false,
           drawerIcon: ({ }) => (
             <Image
-              source={require('./assets/iconsTab/info.png')} style={{ width: 20, height: 20 }}
+              source={require('./assets/images/menu/help.png')} style={{ width: 20, height: 20, tintColor: 'black' }}
             />)
         }} />
       </Drawer.Navigator>

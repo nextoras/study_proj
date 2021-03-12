@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, StyleSheet, ImageBackground } from 'react-native';
-import useWeather from './../../utils/useWeather';
+import useWeather from './../../hooks/useWeather';
 import Weather from './Weather'
 import LoadingView from '../LoadingView';
 
