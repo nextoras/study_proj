@@ -13,6 +13,7 @@ namespace back_end
     public class OpenweatherInfoPartDTO
     {
         public long dt{ get; set; }
+        public DateTime dt_text { set; get; }
         public MainInfo main{ get; set; }
         public List<DescriptionInfo> weather{ get; set; }
         public Wind wind{ get; set; }
