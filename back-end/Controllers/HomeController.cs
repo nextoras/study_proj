@@ -58,7 +58,20 @@ namespace back_end.Controllers
             }
 
         }
-
+        /// <summary>
+        /// Detect language from input string
+        /// </summary>
+        /// <param name="text"></param>
+        public string SetLanguage(string text)
+        {
+            //по факту без разницы что придет в качестве входной строки, по 1 букве определяется принадлежность к языку
+            text = text.ToLower();
+            if (text[0] > 'а' && text[0] <= 'я')
+            {
+                return "ru";
+            }
+            else return "en";
+        }
         public IActionResult GetWeatherFromLatLen(string Flat, string Len)
         {
             try
@@ -90,7 +103,7 @@ namespace back_end.Controllers
         /// <param name="format">city</param>
         /// <returns></returns>
         [HttpPost]
-        public async  Task<IActionResult> GetInfo(float flat, float len, string city, string language, string format)
+        public async  Task<IActionResult> GetInfo(float flat, float len, string city, string format)
         {
             try
             {
@@ -103,7 +116,7 @@ namespace back_end.Controllers
                     flat = coordinates.coord.lat;
                     len = coordinates.coord.lon;
                 }
-
+                string language = SetLanguage(city);
                 var info = await GetInfoFromOpenWeather(flat, len, apiKey, language, format);
 
                 var infoDTO = mappingToEntity(info);
