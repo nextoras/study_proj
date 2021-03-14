@@ -213,10 +213,27 @@ namespace back_end.Controllers
                 dayInfo = new List<InfoPartDTO>(),
                 weekInfo = new List<InfoPartDTO>()
             };
-
+            InfoPartDTO day = new InfoPartDTO();
+            InfoPartDTO week = new InfoPartDTO();
             foreach (var item in openweatherDTO.list)
             {
-                
+                if(DateTime.Today==item.main.Date)
+                {
+                    day.city = openweatherDTO.city.name;
+                    day.clouds = item.clouds.all;
+                    day.date = item.main.Date;
+                    day.description = item.weather[0].description;
+                    day.temperature = item.main.temp;
+                    day.wind = item.wind.speed;
+                    dto.dayInfo.Add(day);
+                }
+                week.city = openweatherDTO.city.name;
+                week.clouds = item.clouds.all;
+                week.date = item.main.Date;
+                week.description = item.weather[0].description;
+                week.temperature = item.main.temp;
+                week.wind = item.wind.speed;
+                dto.weekInfo.Add(week);
             }
 
             return dto;

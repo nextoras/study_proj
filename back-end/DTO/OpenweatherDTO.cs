@@ -20,6 +20,7 @@ namespace back_end
     }
     public class MainInfo
     {
+        public DateTime Date { set; get; }
         public double temp{ get; set; }
         public double feels_like{ get; set; }
     }
