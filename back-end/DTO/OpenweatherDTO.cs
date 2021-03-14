@@ -17,12 +17,13 @@ namespace back_end
         public List<DescriptionInfo> weather{ get; set; }
         public Wind wind{ get; set; }
         public CloudsInfo clouds{ get; set; }
+        public string dt_txt{set;get;}
     }
     public class MainInfo
-    {
-        public DateTime Date { set; get; }
+    {        
         public double temp{ get; set; }
         public double feels_like{ get; set; }
+                    
     }
 
     public class DescriptionInfo

@@ -91,7 +91,25 @@ namespace back_end.Controllers
                 throw;
             }
         }
-
+        public IActionResult GetWeatherFromLatLen7days(string Flat, string Len)
+        {
+            try
+            {
+                string ApiKey = "ae4b4e0ee9db8f4040b03a514cf7a928";
+                string url = string.Format("https://api.openweathermap.org/data/2.5/onecall?lat={0}.8304307&lon={1}&exclude=current,minutely,hourly,alerts&appid={2}", Flat, Len, ApiKey);
+                var webClient = new WebClient();
+                var content = webClient.DownloadString(url);
+                if (content == null)
+                {
+                    throw new ArgumentException("Широта или долгота не валидны");
+                }
+                return Content(content);
+            }
+            catch (ArgumentException)
+            {
+                throw;
+            }
+        }
         
         /// <summary>
         /// Returns info about weather full
@@ -182,7 +200,6 @@ namespace back_end.Controllers
             {
                 string url = string.Format("https://api.openweathermap.org/data/2.5/forecast?lat={0}&lon={1}&units=metric&appid={2}&exclude={3}&lang={4}", lat, len, apiKey, format, language);
 
-
                 HttpClient client = new HttpClient();
 
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
@@ -219,6 +236,7 @@ namespace back_end.Controllers
             {
                 if(DateTime.Today==item.main.Date)
                 {
+                    day.SetDate(item.dt_txt);
                     day.city = openweatherDTO.city.name;
                     day.clouds = item.clouds.all;
                     day.date = item.main.Date;
