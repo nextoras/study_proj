@@ -6,7 +6,7 @@ namespace back_end
 {
     public class OpenweatherDTO
     {
-        public List<OpenweatherInfoPartDTO> list { get; set; }
+        public List<OpenweatherInfoPartDTO> hourly { get; set; }
         public City city{ get; set; }
     }
 
@@ -15,9 +15,10 @@ namespace back_end
         public long dt{ get; set; }
         public MainInfo main{ get; set; }
         public List<DescriptionInfo> weather{ get; set; }
-        public Wind wind{ get; set; }
-        public CloudsInfo clouds{ get; set; }
+        public double wind_speed{ get; set; }
+        public double clouds{ get; set; }
         public string dt_txt{set;get;}
+        public double temp { get; set;}
     }
     public class MainInfo
     {        

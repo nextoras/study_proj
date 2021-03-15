@@ -11,7 +11,6 @@ using Microsoft.AspNetCore.Http;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Configuration;
 
 namespace back_end.Controllers
 {
@@ -35,7 +34,7 @@ namespace back_end.Controllers
         {
             return View();
         }
-  
+
         [HttpPost]
         public IActionResult GetWeatherFromCity(string City)
         {
@@ -46,7 +45,7 @@ namespace back_end.Controllers
                 var webClient = new WebClient();
 
                 var content = webClient.DownloadString(url);
-                if(content==null)
+                if (content == null)
                 {
                     throw new ArgumentException("Город пустой либо не валидный");
                 }
@@ -110,7 +109,7 @@ namespace back_end.Controllers
                 throw;
             }
         }
-        
+
         /// <summary>
         /// Returns info about weather full
         /// </summary>
@@ -121,7 +120,7 @@ namespace back_end.Controllers
         /// <param name="format">city</param>
         /// <returns></returns>
         [HttpPost]
-        public async  Task<IActionResult> GetInfo(float flat, float len, string city, string format)
+        public async Task<IActionResult> GetInfo(float flat, float len, string city, string format)
         {
             try
             {
@@ -137,7 +136,7 @@ namespace back_end.Controllers
                 string language = SetLanguage(city);
                 var info = await GetInfoFromOpenWeather(flat, len, apiKey, language, format);
 
-                var infoDTO = mappingToEntity(info);
+                var infoDTO = await mappingToEntity(info);
 
                 //метод формирования дто для дня
 
@@ -147,10 +146,10 @@ namespace back_end.Controllers
 
                 InfoDTO dto = new InfoDTO()
                 {
-                    
+
                 };
 
-                return Content("");
+                return Ok(infoDTO);
             }
             catch
             {
@@ -172,7 +171,7 @@ namespace back_end.Controllers
                 var webClient = new WebClient();
 
                 var content = webClient.DownloadString(url);
-                if(content==null)
+                if (content == null)
                 {
                     throw new ArgumentException("Город пустой либо не валидный");
                 }
@@ -182,7 +181,7 @@ namespace back_end.Controllers
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 client.BaseAddress = new Uri(url);
                 client.DefaultRequestHeaders.Add("Accept", "application/json");
-                var response = await client.GetAsync("" );    
+                var response = await client.GetAsync("");
 
                 var result = response.Content.ReadAsAsync<CoordinatesDTO>().Result;
 
@@ -198,26 +197,26 @@ namespace back_end.Controllers
         {
             try
             {
-                string url = string.Format("https://api.openweathermap.org/data/2.5/forecast?lat={0}&lon={1}&units=metric&appid={2}&exclude={3}&lang={4}", lat, len, apiKey, format, language);
+                string url = string.Format("https://api.openweathermap.org/data/2.5/onecall?lat={0}&lon={1}&units=metric&appid={2}&exclude={3}&lang={4}", lat, len, apiKey, format, language);
 
                 HttpClient client = new HttpClient();
 
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 client.BaseAddress = new Uri(url);
                 client.DefaultRequestHeaders.Add("Accept", "application/json");
-                var response = await client.GetAsync("" ); 
-                
-                if(response==null || response.StatusCode != HttpStatusCode.OK)
+                var response = await client.GetAsync("");
+
+                if (response == null || response.StatusCode != HttpStatusCode.OK)
                 {
                     throw new ArgumentException("При запросе данных о погоде произошла ошибка");
-                }   
+                }
 
                 var resultString = response.Content.ReadAsStringAsync();
                 var result = response.Content.ReadAsAsync<OpenweatherDTO>().Result;
 
                 return result;
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 throw new Exception(e.Message);
             }
@@ -232,36 +231,51 @@ namespace back_end.Controllers
             };
             InfoPartDTO day = new InfoPartDTO();
             InfoPartDTO week = new InfoPartDTO();
-            foreach (var item in openweatherDTO.list)
+            foreach (var item in openweatherDTO.hourly)
             {
-                if(DateTime.Today==item.main.Date)
+                if (UnixTimeStampToDateTime(item.dt).Day == DateTime.Today.Day)
                 {
-                    day.SetDate(item.dt_txt);
-                    day.city = openweatherDTO.city.name;
-                    day.clouds = item.clouds.all;
-                    day.date = item.main.Date;
+                    day.dateTime = item.dt;
+                    //day.city = openweatherDTO.city.name;
+                    day.clouds = item.clouds;
                     day.description = item.weather[0].description;
-                    day.temperature = item.main.temp;
-                    day.wind = item.wind.speed;
+                    day.temperature = item.temp;
+                    day.wind = item.wind_speed;
                     dto.dayInfo.Add(day);
                 }
-                week.city = openweatherDTO.city.name;
-                week.clouds = item.clouds.all;
-                week.date = item.main.Date;
-                week.description = item.weather[0].description;
-                week.temperature = item.main.temp;
-                week.wind = item.wind.speed;
-                dto.weekInfo.Add(week);
+
+                if (UnixTimeStampToDateTime(item.dt).Day == DateTime.Today.AddDays(1).Day)
+                {
+                    day.dateTime = item.dt;
+                    //day.city = openweatherDTO.city.name;
+                    day.clouds = item.clouds;
+                    day.description = item.weather[0].description;
+                    day.temperature = item.temp;
+                    day.wind = item.wind_speed;
+                    dto.weekInfo.Add(day);
+                }
+                // week.city = openweatherDTO.city.name;
+                // week.clouds = item.clouds.all;
+                // //week.date = item.main.Date;
+                // week.description = item.weather[0].description;
+                // week.temperature = item.main.temp;
+                // week.wind = item.wind.speed;
+                // dto.weekInfo.Add(week);
             }
 
             return dto;
         }
 
-        public static DateTime UnixTimeStampToDateTime( long unixTimeStamp )
+        private DateTime SetDate(string date)
+        {
+            return DateTime.ParseExact(date, "yyyy-MM-dd HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture);
+        }
+
+        public static DateTime UnixTimeStampToDateTime(long unixTimeStamp)
         {
             // Unix timestamp is seconds past epoch
-            System.DateTime dtDateTime = new DateTime(1970,1,1,0,0,0,0,System.DateTimeKind.Utc);
-            dtDateTime = dtDateTime.AddSeconds( unixTimeStamp ).ToLocalTime();
+            System.DateTime dtDateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc);
+            dtDateTime = dtDateTime.AddSeconds(unixTimeStamp).ToLocalTime();
             return dtDateTime;
         }
     }
