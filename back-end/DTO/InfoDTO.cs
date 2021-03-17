@@ -8,6 +8,7 @@ namespace back_end
     {
         public List<InfoPartDTO> dayInfo { get; set;}
         public List<InfoPartDTO> weekInfo { get; set;}
+        public string city { get; set; }
 
     }
 
@@ -17,8 +18,10 @@ namespace back_end
         public double temperature {get; set; }
         public double wind { get; set; }
         public double clouds { get; set; }
-        public string city { get; set; }
         public string description { get; set; }
+        //string icon
+        //textFromKsu
+        //feels_like
         
     }
     

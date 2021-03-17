@@ -95,7 +95,7 @@ namespace back_end.Controllers
             try
             {
                 string ApiKey = "ae4b4e0ee9db8f4040b03a514cf7a928";
-                string url = string.Format("https://api.openweathermap.org/data/2.5/onecall?lat={0}.8304307&lon={1}&exclude=current,minutely,hourly,alerts&appid={2}", Flat, Len, ApiKey);
+                string url = string.Format("https://api.openweathermap.org/data/2.5/onecall?lat={0}&lon={1}&exclude=current,minutely,hourly,alerts&appid={2}", Flat, Len, ApiKey);
                 var webClient = new WebClient();
                 var content = webClient.DownloadString(url);
                 if (content == null)
@@ -229,12 +229,13 @@ namespace back_end.Controllers
                 dayInfo = new List<InfoPartDTO>(),
                 weekInfo = new List<InfoPartDTO>()
             };
-            InfoPartDTO day = new InfoPartDTO();
-            InfoPartDTO week = new InfoPartDTO();
+            
+            
             foreach (var item in openweatherDTO.hourly)
             {
                 if (UnixTimeStampToDateTime(item.dt).Day == DateTime.Today.Day)
                 {
+                    InfoPartDTO day = new InfoPartDTO();
                     day.dateTime = item.dt;
                     //day.city = openweatherDTO.city.name;
                     day.clouds = item.clouds;
@@ -244,16 +245,7 @@ namespace back_end.Controllers
                     dto.dayInfo.Add(day);
                 }
 
-                if (UnixTimeStampToDateTime(item.dt).Day == DateTime.Today.AddDays(1).Day)
-                {
-                    day.dateTime = item.dt;
-                    //day.city = openweatherDTO.city.name;
-                    day.clouds = item.clouds;
-                    day.description = item.weather[0].description;
-                    day.temperature = item.temp;
-                    day.wind = item.wind_speed;
-                    dto.weekInfo.Add(day);
-                }
+                
                 // week.city = openweatherDTO.city.name;
                 // week.clouds = item.clouds.all;
                 // //week.date = item.main.Date;
@@ -261,6 +253,22 @@ namespace back_end.Controllers
                 // week.temperature = item.main.temp;
                 // week.wind = item.wind.speed;
                 // dto.weekInfo.Add(week);
+            }
+
+            foreach (var item in openweatherDTO.daily)
+            {
+
+                //if (UnixTimeStampToDateTime(item.dt).Day == DateTime.Today.AddDays(1).Day)
+                //    {
+                        InfoPartDTO week = new InfoPartDTO();
+                        week.dateTime = item.dt;
+                        //day.city = openweatherDTO.city.name;
+                        week.clouds = item.clouds;
+                        week.description = item.weather[0].description;
+                        week.temperature = item.temp.day;
+                        week.wind = item.wind_speed;
+                        dto.weekInfo.Add(week);
+                //    }
             }
 
             return dto;

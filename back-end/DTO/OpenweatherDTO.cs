@@ -6,41 +6,58 @@ namespace back_end
 {
     public class OpenweatherDTO
     {
-        public List<OpenweatherInfoPartDTO> hourly { get; set; }
-        public City city{ get; set; }
+        public List<OpenweatherInfoPartDayDTO> hourly { get; set; }
+        public List<OpenweatherInfoPartWeekDTO> daily { get; set; }
+        public City city { get; set; }
     }
 
     public class OpenweatherInfoPartDTO
     {
-        public long dt{ get; set; }
-        public MainInfo main{ get; set; }
-        public List<DescriptionInfo> weather{ get; set; }
-        public double wind_speed{ get; set; }
-        public double clouds{ get; set; }
-        public string dt_txt{set;get;}
-        public double temp { get; set;}
-    }
-    public class MainInfo
-    {        
-        public double temp{ get; set; }
-        public double feels_like{ get; set; }
-                    
+        public long dt { get; set; }
+        public List<DescriptionInfo> weather { get; set; }
+        public double wind_speed { get; set; }
+        public double clouds { get; set; }
+        
+        
     }
 
     public class DescriptionInfo
     {
-        public string description{ get; set; }
+        public string description { get; set; }
+        public string icon { get; set; }
     }
-    public class CloudsInfo
-    {
-        public long all{ get; set; }
-    }
-    public class Wind
-    {
-        public long speed{ get; set; }
-    }
+
     public class City
-    { 
+    {
         public string name { get; set; }
+    }
+
+    public class OpenweatherInfoPartDayDTO : OpenweatherInfoPartDTO
+    {
+        public double feels_like { get; set; }
+        public double temp { get; set; }
+    }
+
+    public class OpenweatherInfoPartWeekDTO : OpenweatherInfoPartDTO
+    {
+        public FeelsLikeDTO feels_like { get; set; }
+        public TempWeekDTO temp { get; set; }
+    }
+
+    public class FeelsLikeDTO
+    {
+        public double day { get; set; }
+        public double night { get; set; }
+        public double eve { get; set; }
+        public double morn { get; set; }
+    }
+    public class TempWeekDTO
+    {
+        public double day { get; set; }
+        public double night { get; set; }
+        public double eve { get; set; }
+        public double morn { get; set; }
+        public double min { get; set; }
+        public double max { get; set; }
     }
 }
