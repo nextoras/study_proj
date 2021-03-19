@@ -133,14 +133,10 @@ namespace back_end.Controllers
                     flat = coordinates.coord.lat;
                     len = coordinates.coord.lon;
                 }
-                string language = SetLanguage(city);
+                string language = "ru";
                 var info = await GetInfoFromOpenWeather(flat, len, apiKey, language, format);
 
                 var infoDTO = await mappingToEntity(info);
-
-                //метод формирования дто для дня
-
-                //метод формирования дто для недели
 
                 List<InfoPartDTO> dayInfo = new List<InfoPartDTO>();
 
@@ -151,9 +147,9 @@ namespace back_end.Controllers
 
                 return Ok(infoDTO);
             }
-            catch
+            catch (Exception e)
             {
-                return Ok("Че-то пошло по пи*(город - пустой)");
+                throw new Exception(e.Message);
             }
         }
 
@@ -229,48 +225,43 @@ namespace back_end.Controllers
                 dayInfo = new List<InfoPartDTO>(),
                 weekInfo = new List<InfoPartDTO>()
             };
-            
-            
+
+
             foreach (var item in openweatherDTO.hourly)
             {
-                if (UnixTimeStampToDateTime(item.dt).Day == DateTime.Today.Day)
+                DateTime date = UnixTimeStampToDateTime(item.dt).ToLocalTime();
+                if (date.Day == DateTime.Today.Day && date.Hour > DateTime.Now.Hour)
                 {
                     InfoPartDTO day = new InfoPartDTO();
                     day.dateTime = item.dt;
-                    //day.city = openweatherDTO.city.name;
                     day.clouds = item.clouds;
                     day.description = item.weather[0].description;
                     day.temperature = item.temp;
                     day.wind = item.wind_speed;
+                    day.feels_like = item.feels_like;
+                    day.icon = item.weather[0].icon;
+                    //day.textFromKsu = 
                     dto.dayInfo.Add(day);
                 }
-
-                
-                // week.city = openweatherDTO.city.name;
-                // week.clouds = item.clouds.all;
-                // //week.date = item.main.Date;
-                // week.description = item.weather[0].description;
-                // week.temperature = item.main.temp;
-                // week.wind = item.wind.speed;
-                // dto.weekInfo.Add(week);
             }
 
             foreach (var item in openweatherDTO.daily)
             {
+                DateTime date = UnixTimeStampToDateTime(item.dt).ToLocalTime();
 
-                //if (UnixTimeStampToDateTime(item.dt).Day == DateTime.Today.AddDays(1).Day)
-                //    {
-                        InfoPartDTO week = new InfoPartDTO();
-                        week.dateTime = item.dt;
-                        //day.city = openweatherDTO.city.name;
-                        week.clouds = item.clouds;
-                        week.description = item.weather[0].description;
-                        week.temperature = item.temp.day;
-                        week.wind = item.wind_speed;
-                        dto.weekInfo.Add(week);
-                //    }
+                if (date.Day > DateTime.Now.Day)
+                {
+                    InfoPartDTO week = new InfoPartDTO();
+                    week.dateTime = item.dt;
+                    week.clouds = item.clouds;
+                    week.description = item.weather[0].description;
+                    week.temperature = item.temp.day;
+                    week.wind = item.wind_speed;
+                    week.feels_like = item.feels_like.day;
+                    week.icon = item.weather[0].icon;
+                    dto.weekInfo.Add(week);
+                }
             }
-
             return dto;
         }
 
