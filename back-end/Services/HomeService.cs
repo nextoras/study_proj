@@ -135,12 +135,12 @@ namespace back_end.Services
 
             foreach (var item in openweatherDTO.hourly)
             {
-                //добавление фразы Ксюхи для дня
-                phraze = SendPhraze(lang, item.clouds, item.temp);
-
                 DateTime date = UnixTimeStampToDateTime(item.dt).ToLocalTime();
                 if (date.Day == DateTime.Today.Day && date.Hour > DateTime.Now.Hour)
                 {
+                    //добавление фразы Ксюхи для дня
+                    phraze = SendPhraze(lang, item.clouds, item.temp);
+                    
                     InfoPartDTO day = new InfoPartDTO();
                     day.dateTime = item.dt;
                     day.clouds = item.clouds;
@@ -158,11 +158,11 @@ namespace back_end.Services
             {
                 DateTime date = UnixTimeStampToDateTime(item.dt).ToLocalTime();
 
-                //добавление фразы Ксюхи для недели
-                phraze = SendPhraze(lang, item.clouds, item.temp.day);
-
                 if (date.Day > DateTime.Now.Day)
                 {
+                    //добавление фразы Ксюхи для недели
+                    phraze = SendPhraze(lang, item.clouds, item.temp.day);
+
                     InfoPartDTO week = new InfoPartDTO();
                     week.dateTime = item.dt;
                     week.clouds = item.clouds;
