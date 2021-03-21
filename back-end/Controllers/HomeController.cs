@@ -136,7 +136,7 @@ namespace back_end.Controllers
                 string language = "ru";
                 var info = await GetInfoFromOpenWeather(flat, len, apiKey, language, format);
 
-                var infoDTO = await mappingToEntity(info);
+                var infoDTO = await mappingToEntity(info,language);
 
                 List<InfoPartDTO> dayInfo = new List<InfoPartDTO>();
 
@@ -217,9 +217,186 @@ namespace back_end.Controllers
                 throw new Exception(e.Message);
             }
         }
-
-        private async Task<InfoDTO> mappingToEntity(OpenweatherDTO openweatherDTO)
+        /// <summary>
+        /// взависимости от облачности и температуры возвращает определенную фразу на руссуком.
+        /// </summary>
+        /// <param name="cloud">облачность</param>
+        /// <param name="temperature">температура</param>
+        /// <returns>фраза на русском</returns>
+        private string GetRuPhraze(double cloud, double temperature)
         {
+            string phraza = String.Empty;
+            if (cloud <= 50.0)
+            {
+                if (temperature >= 30.0 && temperature <= 40.0)
+                {
+                    phraza = "За окном жара. Спасает легкая одежда и легкая надежда на дождь";
+                }
+                if (temperature < 30.0 && temperature >= 25.0)
+                {
+                    phraza = "За окном жара! Пей побольше воды и не забывай панамку.";
+                }
+                if (temperature < 25.0 && temperature >= 20.0)
+                {
+                    phraza = "Время загорать! Но не стоит забывать про солнцезащитный крем.";
+                }
+                if (temperature < 20.0 && temperature >= 10.0)
+                {
+                    phraza = "Не стоит упускать возможность насладиться хорошей погодой.";
+                }
+                if (temperature < 10.0 && temperature >= 0.0)
+                {
+                    phraza = "На улице довольно холодно, стоит надеть свитер.";
+                }
+                if (temperature < 0.0 && temperature >= -15.0)
+                {
+                    phraza = "На улице похолодало. Шапка и перчатки будут отличной идеей.";
+                }
+                if (temperature < -15.0 && temperature >= -20.0)
+                {
+                    phraza = "Брр, время доставать зимние вещи из шкафа.";
+                }
+                if (temperature < -20.0 && temperature >= -30.0)
+                {
+                    phraza = " В такую погоду не обойтись без шапки и шарфа.";
+                }
+                if (temperature < -30.0)
+                {
+                    phraza = "Не глупи, оставайся дома под пледом и с какао.";
+                }
+            }
+            else
+            {
+                if (temperature <= 30.0 && temperature > 10.0)
+                {
+                    phraza = "Сегодня может пойти дождь. Захвати с собой дождевик.";
+                }
+                if (temperature <= 10.0 && temperature > 0.0)
+                {
+                    phraza = "за окном дожди. Не забудь свой зонт.";
+                }
+                if (temperature <= 0.0 && temperature > -10.0)
+                {
+                    phraza = "Не забудь надеть теплые носки.";
+                }
+                if (temperature <= -10.0 && temperature > -20.0)
+                {
+                    phraza = "Если ты не надел теплую куртку, я уже звоню твоей маме….";
+                }
+                if (temperature <= -20.0 && temperature > -30.0)
+                {
+                    phraza = "За окном холодно и снежно. Одевайся потеплее, !";
+                }
+                if (temperature < -30.0)
+                {
+                    phraza = "По возможности, оставайся дома под пледом и с какао.";
+                }
+            }
+            return phraza;
+        }
+        /// <summary>
+        /// взависимости от облачности и температуры возвращает определенную фразу на английском.
+        /// </summary>
+        /// <param name="cloud">облачность</param>
+        /// <param name="temperature">температура</param>
+        /// <returns>фраза на английском</returns>
+        private string GetEnPhraze(double cloud, double temperature)
+        {
+            string phraza = String.Empty;
+            if (cloud < 50.0)
+            {
+                if (temperature >= 30.0 && temperature <= 40.0)
+                {
+                    phraza = "It's hot outside. Light clothing and light hope for rain save you.";
+                }
+                if (temperature < 30 && temperature >= 25)
+                {
+                    phraza = "It's hot outside! Drink plenty of water and don't forget your panama hat.";
+                }
+                if (temperature < 25 && temperature >= 20)
+                {
+                    phraza = "00, time to sunbathe! But do not forget about sunscreen and a cap.";
+                }
+                if (temperature < 20 && temperature >= 10)
+                {
+                    phraza = "Do not miss the opportunity to enjoy the good weather, Name.";
+                }
+                if (temperature < 10 && temperature >= 0)
+                {
+                    phraza = "Name, it's quite cold outside, you should wear a sweater.";
+                }
+                if (temperature < 0 && temperature >= -15.0)
+                {
+                    phraza = "It's getting colder outside. A hat and gloves would be a great idea.";
+                }
+                if (temperature < -15.0 && temperature >= -20.0)
+                {
+                    phraza = "Brr, time to get winter clothes out of the closet.";
+                }
+                if (temperature < -20.0 && temperature >= -30.0)
+                {
+                    phraza = "In this weather, you can not do without a hat and scarf.";
+                }
+                if (temperature < -30)
+                {
+                    phraza = "Don't be silly, stay at home under a blanket and with cocoa.";
+                }
+            }
+            else
+            {
+                if (temperature <= 30 && temperature > 10)
+                {
+                    phraza = "It may rain today. Bring a raincoat with you.";
+                }
+                if (temperature <= 10 && temperature > 0)
+                {
+                    phraza = "Name, rain outside the window. Don't forget your umbrella.";
+                }
+                if (temperature <= 0 && temperature > -10)
+                {
+                    phraza = "Don't forget to wear warm socks, Name.";
+                }
+                if (temperature <= -10 && temperature > -20)
+                {
+                    phraza = "Name, if you're not wearing a warm jacket, I'm already calling your mom....";
+                }
+                if (temperature <= -20 && temperature > -30)
+                {
+                    phraza = "It's cold and snowy outside. Dress warmly, !";
+                }
+                if (temperature < -30)
+                {
+                    phraza = "If possible, stay at home under a blanket and with cocoa.";
+                }
+            }
+            return phraza;
+        }
+        /// <summary>
+        /// Взависимости от языка вызываем метод получения фразы на русском или английском
+        /// </summary>
+        /// <param name="lang">язык в формате "ru"/"en"</param>
+        /// <param name="cloud">облачность</param>
+        /// <param name="temperature">температура</param>
+        /// <returns>фраза на выбранном языке</returns>
+        private string SendPhraze(string lang, double cloud, double temperature)
+        {
+            string phraze = string.Empty;
+            if (lang == "ru")
+            {
+                phraze = GetRuPhraze(cloud, temperature);
+            }
+            else
+            {
+                phraze = GetEnPhraze(cloud, temperature);
+            }
+            return phraze;
+        }
+        private async Task<InfoDTO> mappingToEntity(OpenweatherDTO openweatherDTO,string lang)
+        {
+            //строка с фразой для ксюхи
+            string phraze = string.Empty;
+            
+
             InfoDTO dto = new InfoDTO()
             {
                 dayInfo = new List<InfoPartDTO>(),
@@ -229,6 +406,9 @@ namespace back_end.Controllers
 
             foreach (var item in openweatherDTO.hourly)
             {
+                //добавление фразы Ксюхи для дня
+                phraze = SendPhraze(lang, item.clouds, item.temp);
+
                 DateTime date = UnixTimeStampToDateTime(item.dt).ToLocalTime();
                 if (date.Day == DateTime.Today.Day && date.Hour > DateTime.Now.Hour)
                 {
@@ -240,7 +420,7 @@ namespace back_end.Controllers
                     day.wind = item.wind_speed;
                     day.feels_like = item.feels_like;
                     day.icon = item.weather[0].icon;
-                    //day.textFromKsu = 
+                    day.textFromKsu = phraze;
                     dto.dayInfo.Add(day);
                 }
             }
@@ -248,6 +428,9 @@ namespace back_end.Controllers
             foreach (var item in openweatherDTO.daily)
             {
                 DateTime date = UnixTimeStampToDateTime(item.dt).ToLocalTime();
+
+                //добавление фразы Ксюхи для недели
+                phraze = SendPhraze(lang, item.clouds, item.temp.day);
 
                 if (date.Day > DateTime.Now.Day)
                 {
@@ -257,6 +440,7 @@ namespace back_end.Controllers
                     week.description = item.weather[0].description;
                     week.temperature = item.temp.day;
                     week.wind = item.wind_speed;
+                    week.textFromKsu = phraze;
                     week.feels_like = item.feels_like.day;
                     week.icon = item.weather[0].icon;
                     dto.weekInfo.Add(week);
