@@ -64,8 +64,9 @@ namespace back_end.Controllers
         public string SetLanguage(string text)
         {
             //по факту без разницы что придет в качестве входной строки, по 1 букве определяется принадлежность к языку
+            if (text == null) return "en";
             text = text.ToLower();
-            if (text[0] > 'а' && text[0] <= 'я')
+            if ( text[0] > 'а' && text[0] <= 'я')
             {
                 return "ru";
             }
@@ -120,7 +121,7 @@ namespace back_end.Controllers
         /// <param name="format">city</param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<IActionResult> GetInfo(float flat, float len, string city, string format)
+        public async Task<IActionResult> GetInfo(float flat, float len, string city)
         {
             try
             {
@@ -133,17 +134,12 @@ namespace back_end.Controllers
                     flat = coordinates.coord.lat;
                     len = coordinates.coord.lon;
                 }
-                string language = "ru";
-                var info = await GetInfoFromOpenWeather(flat, len, apiKey, language, format);
+
+                string language = SetLanguage(city);
+
+                var info = await GetInfoFromOpenWeather(flat, len, apiKey, language);
 
                 var infoDTO = await mappingToEntity(info);
-
-                List<InfoPartDTO> dayInfo = new List<InfoPartDTO>();
-
-                InfoDTO dto = new InfoDTO()
-                {
-
-                };
 
                 return Ok(infoDTO);
             }
@@ -189,11 +185,11 @@ namespace back_end.Controllers
             }
         }
 
-        private async Task<OpenweatherDTO> GetInfoFromOpenWeather(float lat, float len, string apiKey, string language, string format)
+        private async Task<OpenweatherDTO> GetInfoFromOpenWeather(float lat, float len, string apiKey, string language)
         {
             try
             {
-                string url = string.Format("https://api.openweathermap.org/data/2.5/onecall?lat={0}&lon={1}&units=metric&appid={2}&exclude={3}&lang={4}", lat, len, apiKey, format, language);
+                string url = string.Format("https://api.openweathermap.org/data/2.5/onecall?lat={0}&lon={1}&units=metric&appid={2}&exclude=current,minutely,alerts&lang={3}", lat, len, apiKey, language);
 
                 HttpClient client = new HttpClient();
 
@@ -263,11 +259,6 @@ namespace back_end.Controllers
                 }
             }
             return dto;
-        }
-
-        private DateTime SetDate(string date)
-        {
-            return DateTime.ParseExact(date, "yyyy-MM-dd HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture);
         }
 
         public static DateTime UnixTimeStampToDateTime(long unixTimeStamp)
