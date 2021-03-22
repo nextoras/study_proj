@@ -7,6 +7,7 @@ import CityWeatherView from './components/City/CityWeatherView';
 import { Image } from 'react-native';
 import TestComponent from './components/TestComponent';
 import DetailedWeatherView from './components/DetailedWeather/DetailedWeatherView';
+import Game from './components/Game/Game'
 
 
 /** Навигатор  */
@@ -33,18 +34,11 @@ const App = () => {
               source={require('./assets/images/menu/calendar.png')} style={{ width: 20, height: 20, tintColor: 'black' }}
             />)
         }} />
-        <Drawer.Screen name="Игра" component={TestComponent} options={{
+        <Drawer.Screen name="Игра" component={Game} options={{
           headerShown: false,
           drawerIcon: ({ }) => (
             <Image
               source={require('./assets/images/menu/game.png')} style={{ width: 20, height: 20, tintColor: 'black' }}
-            />)
-        }} />
-        <Drawer.Screen name="Настройки" component={TestComponent} options={{
-          headerShown: false,
-          drawerIcon: ({ }) => (
-            <Image
-              source={require('./assets/images/menu/settings.png')} style={{ width: 20, height: 20, tintColor: 'black' }}
             />)
         }} />
         <Drawer.Screen name="Помощь" component={TestComponent} options={{
