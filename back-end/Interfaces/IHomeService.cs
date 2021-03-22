@@ -8,6 +8,6 @@ namespace back_end.Interfaces
 {
     public interface IHomeService
     {
-        Task<InfoDTO> GetInfoAsync(float flat, float len, string city);
+        Task<InfoDTO> GetInfoAsync(float? flat, float? len, string city);
     }
 }

@@ -110,7 +110,7 @@ namespace back_end.Controllers
         /// <param name="format">city</param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<IActionResult> GetInfo(float flat, float len, string city)
+        public async Task<IActionResult> GetInfo(float? flat, float? len, string city)
         {
             try
             {

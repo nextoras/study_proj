@@ -31,7 +31,7 @@ namespace back_end.Services
         /// <summary>
         /// Собираем и упаковываем данные
         /// </summary>
-        public async Task<InfoDTO> GetInfoAsync(float flat, float len, string city)
+        public async Task<InfoDTO> GetInfoAsync(float? flat, float? len, string city)
         {
             if (city != null && city != "")
             {
@@ -43,7 +43,7 @@ namespace back_end.Services
 
             string language = SetLanguage(city);
 
-            var info = await GetInfoFromOpenWeather(flat, len, language);
+            var info = await GetInfoFromOpenWeather((float)flat, (float)len, language);
 
             var infoDTO = mappingToEntity(info, language);
 
