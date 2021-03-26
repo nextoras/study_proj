@@ -5,7 +5,7 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 import WeatherView from './components/LatLon/WeatherView';
 import CityWeatherView from './components/City/CityWeatherView';
 import { Image } from 'react-native';
-import TestComponent from './components/TestComponent';
+import HelpView from './components/HelpView/HelpView';
 import DetailedWeatherView from './components/DetailedWeather/DetailedWeatherView';
 import Game from './components/Game/Game'
 
@@ -41,7 +41,7 @@ const App = () => {
               source={require('./assets/images/menu/game.png')} style={{ width: 20, height: 20, tintColor: 'black' }}
             />)
         }} />
-        <Drawer.Screen name="Помощь" component={TestComponent} options={{
+        <Drawer.Screen name="Помощь" component={HelpView} options={{
           headerShown: false,
           drawerIcon: ({ }) => (
             <Image
