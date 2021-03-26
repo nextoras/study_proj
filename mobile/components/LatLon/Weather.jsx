@@ -1,6 +1,6 @@
 import React from 'react';
 import { isSameDay, format } from "date-fns";
-import { Text, StyleSheet, View, Image, ImageBackground, TouchableOpacity } from 'react-native';
+import { Text, StyleSheet, View, Image, ImageBackground, TouchableOpacity, ScrollView } from 'react-native';
 import {
     useFonts,
 } from '@expo-google-fonts/playfair-display';
@@ -13,10 +13,13 @@ const cloudPers = require("./../../assets/images/cloudWords.png");
 const ChoosePhrase = (temp) => {
     if (temp <= 0 && temp >= -10)
         return 'Брр, время доставать зимние вещи из шкафа.';
+    else if (temp > 0 && temp < 10)
+        return 'На улице довольно холодно, стоит надеть свитер.';
     else if (temp < -10 && temp >= -20)
         return 'В такую погоду не обойтись без шапки и шарфа.';
     else if (temp < -20 && temp > -30)
         return 'Не глупи, оставайся дома под пледом и с какао.';
+
     else return ''
 }
 const ChoosePersonage = (temp) => {
@@ -109,7 +112,7 @@ const Weather = ({ navigation, forecast: { name, list, timezone } }) => {
                         </View>
                     </View>
                     <View style={styles.todayInfo}>
-                        <View style={styles.scrollWeather}>
+                        <ScrollView style={styles.scrollWeather} horizontal={true} showsHorizontalScrollIndicator={true}>
                             {daysByHour.map((day, index) => (
                                 <Card
                                     key={index}
@@ -119,7 +122,7 @@ const Weather = ({ navigation, forecast: { name, list, timezone } }) => {
                                     hour={day.hour}
                                 />
                             ))}
-                        </View>
+                        </ScrollView>
                     </View>
                     <View style={styles.personage}>
                         <View style={styles.cloudContainer}>
