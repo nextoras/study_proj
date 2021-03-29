@@ -2,25 +2,19 @@ import React from 'react';
 import { Text, StyleSheet, View, ImageBackground, Image, TextInput, TouchableOpacity, Alert } from 'react-native';
 import { AppLoading } from 'expo';
 import * as Font from 'expo-font';
-import imageDictionary from './../../utils/imageDictionary.js';
+import imageDictionary from './../../utils/imageDictionary';
 
-
-/** Задний фон  */
-const back = require("./../../assets/images/background.jpg")
 const searchIcon = require("./../../assets/icons/search.png")
 const personageCity = require("./../../assets/personageCity.png")
 const airplane1 = require("./../../assets/airplane1.png")
 const airplane2 = require("./../../assets/airplane2.png")
 const airplane3 = require("./../../assets/airplane3.png")
 
-
-
 let customFonts = {
     'PlayfairDisplay': require('./../../assets/fonts/PlayfairDisplay-Bold.ttf'),
     'Tillana': require('./../../assets/fonts/Tillana-SemiBold.ttf'),
     'Roboto': require('./../../assets/fonts/Roboto-Medium.ttf'),
 };
-
 
 function timestampToDate() {
     var today = new Date();
@@ -91,7 +85,7 @@ export default class CityWeatherView extends React.Component {
     render() {
         if (this.state.fontsLoaded) {
             return (
-                <ImageBackground source={back} style={styles.back}>
+                <ImageBackground source={imageDictionary['background']} style={styles.back}>
                     <View style={styles.container}>
 
                         <View style={styles.cityView}>
