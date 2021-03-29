@@ -1,20 +1,16 @@
-import React, { Component } from 'react';
-import { View, ImageBackground, Animated, StyleSheet, Image, Dimensions, ScrollView, Text } from 'react-native';
+import React from 'react';
+import { View, ImageBackground, StyleSheet } from 'react-native';
 import ImageSlider from 'react-native-image-slider';
-
-/** Задний фон  */
-const back = require("./../../assets/images/background.jpg")
-
-const searchIcon = require("./../../assets/airplane2.png")
-const personageCity = require("./../../assets/airplane1.png")
+import imageDictionary from './../../utils/imageDictionary';
 
 const images = [
-    searchIcon, personageCity
+    imageDictionary['1hv'], imageDictionary['2hv'], imageDictionary['3hv'], imageDictionary['4hv'], imageDictionary['5hv'], imageDictionary['6hv'], imageDictionary['7hv'],
+    imageDictionary['8hv'], imageDictionary['9hv'], imageDictionary['10hv'],
 ]
 
 const HelpView = () => {
     return (
-        <ImageBackground source={back} style={styles.back}>
+        <ImageBackground source={imageDictionary['background']} style={styles.back}>
             <View
                 style={styles.container}
                 flex={1}

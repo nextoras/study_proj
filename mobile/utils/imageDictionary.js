@@ -37,9 +37,9 @@ export default {
     "thermometer": require("../assets/icons/thermometer.png"),
     "tornado": require("../assets/icons/tornado.png"),
     "wind": require("../assets/icons/wind.png"),
-    //////////
+    //////////background
     "background": require("../assets/images/background.jpg"),
-    //////////
+    //////////personage
     '-30': require("../assets/images/personageTemp/_30.png"),
     '-20-30': require("../assets/images/personageTemp/_20_30.png"),
     '-10-20': require("../assets/images/personageTemp/_10_20.png"),
@@ -50,6 +50,19 @@ export default {
     '3025': require("../assets/images/personageTemp/3025.png"),
     '4030': require("../assets/images/personageTemp/4030.png"),
     'def': require("../assets/images/personageTemp/def.png"),
+
+    //////HelpView
+    '1hv': require("./../assets/Help/screen1.png"),
+    '2hv': require("./../assets/Help/screen2.png"),
+    '3hv': require("./../assets/Help/screen3.png"),
+    '4hv': require("./../assets/Help/screen4.png"),
+    '5hv': require("./../assets/Help/screen5.png"),
+    '6hv': require("./../assets/Help/screen6.png"),
+    '7hv': require("./../assets/Help/screen7.png"),
+    '8hv': require("./../assets/Help/screen8.png"),
+    '9hv': require("./../assets/Help/screen9.png"),
+    '10hv': require("./../assets/Help/screen10.png"),
+
 
 
 }
